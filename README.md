@@ -2,7 +2,7 @@
 
 A one-page website for Dr Alex Rivera, a fictional clinical psychologist and trainer, built with [Astro](https://astro.build) as a static site.
 
-- **Live site:** https://alex-rivera-site.pages.dev/
+- **Live site:** https://dr-alex-rivera.pages.dev/
 - **Stack:** Astro 7 (static output), TypeScript, plain scoped CSS, no client-side JavaScript
 - **Hosting:** Cloudflare Pages, deployed from `main`
 
