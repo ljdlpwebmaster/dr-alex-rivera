@@ -54,7 +54,7 @@ public/                      Favicons, web manifest, Cloudflare _headers
 | Alt text | Descriptive alt text on both photos; decorative SVGs and shapes are hidden from assistive tech |
 | Keyboard | Skip link, logical tab order, visible focus ring on every link, no keyboard traps |
 | Server-rendered | Static HTML with every word in the source. The only script is a small inline scroll-reveal enhancement; with JavaScript off, nothing is hidden or missing |
-| Works on a phone | Fluid type and spacing, layouts that wrap, 44 px+ tap targets, no horizontal scrolling at 320 px and up |
+| Works on a phone | Fluid type and spacing, layouts that wrap, photos shown first on small screens, 44 px+ tap targets, no horizontal scrolling at 320 px and up |
 | SEO | Page title, meta description, canonical URL, Open Graph tags, `lang="en-AU"`, sitemap, robots.txt |
 | AEO / structured data | One JSON-LD `@graph`: `WebSite`, `ProfilePage`, `Person` (Dr Rivera) and three `Course` entities linked to her as `provider` and `instructor`, each with an online `CourseInstance` and machine-readable workload |
 
@@ -63,8 +63,10 @@ public/                      Favicons, web manifest, Cloudflare _headers
 - **Astro over WordPress or Hugo.** The page is static content, so a static build is the simplest thing that works: fast, secure, nothing to patch, and Astro's components keep each section self-contained.
 - **One content file.** The page and the JSON-LD both read `src/content/site.ts`, so they can never disagree. Editing a course updates the card and its structured data together.
 - **No JavaScript dependency.** Navigation is three in-page links that fit on any phone, so no menu script is needed. The page works and reads the same with JavaScript off.
+- **Icon-only links are named.** The footer's back-to-top arrow has `aria-label="Back to top"`, so screen readers announce it.
+- **Visual order vs reading order.** On phones the photos appear above the text with CSS `order`; the HTML keeps the heading first, so screen readers and search engines read the name before the image.
 - **Plain scoped CSS.** Each component owns its styles; shared values are CSS custom properties in `global.css`. Easier to read in a review than long utility-class strings.
-- **Self-hosted fonts** via Fontsource (Source Serif 4 for headings, Inter for text): no third-party requests.
+- **Self-hosted fonts** via Fontsource (Plus Jakarta Sans for headings, Inter for text): no third-party requests.
 - **Images through `astro:assets`.** Photos are resized and served as AVIF/WebP with JPEG fallback and explicit dimensions (no layout shift). The hero image loads eagerly with high priority, since it is the largest element on screen.
 - **Motion as progressive enhancement.** Sections fade up as they scroll into view, driven by an IntersectionObserver in an inline script (no extra request, works in every current browser). Content is only hidden once that script has run, so without JavaScript everything is visible. Visitors with reduced motion turned on (for example Windows "Animation effects" off) get no animation.
 - **Indexing per environment.** Production is indexable. Cloudflare Pages preview branches (`CF_PAGES_BRANCH` is not `main`) get `noindex, nofollow` and a disallow-all robots.txt, so only the production URL appears in search.

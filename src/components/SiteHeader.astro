@@ -1,6 +1,6 @@
 ---
 /**
- * Sticky site header: home link and in-page navigation.
+ * Sticky site header: logo (home link) and in-page navigation.
  * Three short links fit on any phone, so no JavaScript menu is needed.
  */
 import { navigation, person } from '../content/site';
@@ -8,7 +8,10 @@ import { navigation, person } from '../content/site';
 
 <header class="site-header">
   <div class="container site-header__inner">
-    <a class="site-header__name" href="#top">{person.name}</a>
+    <a class="brand" href="#top">
+      <span class="brand__mark" aria-hidden="true">AR</span>
+      <span class="brand__name">{person.name}</span>
+    </a>
     <nav aria-label="Main">
       <ul class="site-header__nav">
         {
@@ -34,7 +37,7 @@ import { navigation, person } from '../content/site';
 
   @supports (backdrop-filter: blur(1px)) {
     .site-header {
-      background: rgb(255 255 255 / 0.8);
+      background: rgb(255 255 255 / 0.82);
       backdrop-filter: blur(12px);
     }
   }
@@ -49,22 +52,57 @@ import { navigation, person } from '../content/site';
     padding-block: 0.5rem;
   }
 
-  .site-header__name {
+  .brand {
     display: inline-flex;
     align-items: center;
+    gap: 0.625rem;
     min-height: 2.75rem;
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 600;
     color: var(--color-ink);
     text-decoration: none;
+  }
+
+  .brand:hover {
+    color: var(--color-ink);
+  }
+
+  .brand__mark {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: 0.625rem;
+    background: var(--color-accent);
+    color: var(--color-surface);
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  /* Apricot dot, matching the favicon. */
+  .brand__mark::after {
+    content: '';
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 0.3125rem;
+    height: 0.3125rem;
+    border-radius: 50%;
+    background: var(--color-apricot);
+  }
+
+  .brand__name {
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
   .site-header__nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 0 0.25rem;
-    margin: 0 -0.75rem 0 0;
+    margin: 0 -0.75rem;
     padding: 0;
     list-style: none;
   }
@@ -77,18 +115,11 @@ import { navigation, person } from '../content/site';
     color: var(--color-text);
     font-size: var(--text-sm);
     font-weight: 500;
-    text-decoration: underline;
-    text-decoration-color: transparent;
+    text-decoration: none;
+    transition: color 0.2s ease;
   }
 
   .site-header__nav a:hover {
-    color: var(--color-ink);
-    text-decoration-color: currentColor;
-  }
-
-  @media (max-width: 30rem) {
-    .site-header__nav {
-      margin-left: -0.75rem;
-    }
+    color: var(--color-accent);
   }
 </style>

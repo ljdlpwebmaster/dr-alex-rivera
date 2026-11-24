@@ -1,6 +1,7 @@
 ---
 /**
- * About section: the bio and a supporting photo.
+ * About section: a supporting photo and the bio. The photo comes first in
+ * the layout, so on phones it sits above the text.
  */
 import { Picture } from 'astro:assets';
 import { person, photos } from '../content/site';
@@ -9,53 +10,52 @@ import aboutPhoto from '../assets/alex-rivera-online.jpg';
 
 <section id="about" class="section about" aria-labelledby="about-title">
   <div class="container about__inner">
-    <h2 id="about-title" class="section-title about__title reveal">About</h2>
-    <div class="about__body">
-      <p class="about__bio reveal">{person.bio}</p>
-      <figure class="about__media reveal" style="--reveal-delay: 0.1s">
-        <Picture
-          src={aboutPhoto}
-          alt={photos.about.alt}
-          formats={['avif', 'webp']}
-          widths={[480, 800, 1200]}
-          sizes="(min-width: 64rem) 44rem, 92vw"
-        />
-      </figure>
+    <figure class="about__media reveal">
+      <Picture
+        src={aboutPhoto}
+        alt={photos.about.alt}
+        formats={['avif', 'webp']}
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 64rem) 34rem, 92vw"
+      />
+    </figure>
+    <div class="about__text reveal" style="--reveal-delay: 0.1s">
+      <h2 id="about-title" class="section-title">About</h2>
+      <p class="about__bio">{person.bio}</p>
     </div>
   </div>
 </section>
 
 <style>
   .about__inner {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  @media (min-width: 52rem) {
-    .about__inner {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
-      gap: 4rem;
-    }
-  }
-
-  .about__body {
     display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2.5rem 4.5rem;
   }
 
-  .about__bio {
-    max-width: 40em;
-    font-size: var(--text-lead);
-    line-height: 1.6;
-    color: var(--color-ink);
+  .about__media {
+    flex: 1 1 22rem;
+    min-width: 0;
   }
 
   .about__media :global(img) {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 8 / 5;
     object-fit: cover;
-    object-position: 50% 35%;
-    border-radius: var(--radius);
+    border-radius: var(--radius-md);
+  }
+
+  .about__text {
+    flex: 1 1 26rem;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+  }
+
+  .about__bio {
+    font-size: var(--text-lead);
+    line-height: 1.7;
   }
 </style>

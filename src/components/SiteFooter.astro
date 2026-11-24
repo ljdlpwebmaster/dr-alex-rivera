@@ -1,22 +1,25 @@
 ---
 /**
- * Site footer. The year is set at build time.
+ * Site footer. The year is set at build time. "Back to top" is an
+ * icon-only link, named for screen readers with aria-label.
  */
+import Icon from './Icon.astro';
 import { person } from '../content/site';
 
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
+<footer class="site-footer on-dark">
   <div class="container site-footer__inner">
     <p>&copy; {year} {person.name}</p>
-    <a href="#top">Back to top</a>
+    <a class="site-footer__top" href="#top" aria-label="Back to top" title="Back to top">
+      <Icon name="arrow-up" size={20} />
+    </a>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--color-line);
     background: var(--color-ink);
     color: #c9d4d1;
     font-size: var(--text-sm);
@@ -28,17 +31,34 @@ const year = new Date().getFullYear();
     justify-content: space-between;
     align-items: center;
     gap: 0.75rem;
-    padding-block: 1.25rem;
+    padding-block: 1.125rem;
+    border-top: 1px solid var(--color-dark-line);
   }
 
-  .site-footer a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.75rem;
+  .site-footer__top {
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1.5px solid #3e524e;
+    border-radius: 50%;
     color: var(--color-surface);
+    transition:
+      background-color 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.25s ease;
   }
 
-  .site-footer a:focus-visible {
-    outline-color: var(--color-surface);
+  .site-footer__top:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-surface);
+    transform: translateY(-3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer__top:hover {
+      transform: none;
+    }
   }
 </style>
