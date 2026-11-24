@@ -1,8 +1,10 @@
 ---
 /**
- * Top section: name (the page's only h1), title and photo.
+ * Top section: title, name (the page's only h1), location and photo.
  * The photo is the largest element on first paint, so it loads eagerly
- * with high fetch priority, in responsive AVIF/WebP sizes.
+ * with high fetch priority, in responsive AVIF/WebP sizes. On phones the
+ * photo is shown first visually; the HTML order (heading first) is kept
+ * for screen readers and search engines.
  */
 import { Picture } from 'astro:assets';
 import Icon from './Icon.astro';
@@ -13,29 +15,36 @@ import heroPhoto from '../assets/alex-rivera-workshop.jpg';
 <section id="top" class="hero" aria-labelledby="hero-title">
   <div class="container hero__inner">
     <div class="hero__text">
-      <h1 id="hero-title" class="hero__name reveal">{person.name}</h1>
-      <p class="hero__title reveal" style="--reveal-delay: 0.1s">{person.jobTitle}</p>
-      <p class="hero__location reveal" style="--reveal-delay: 0.15s">
+      <p class="hero__title reveal">{person.jobTitle}</p>
+      <h1 id="hero-title" class="hero__name reveal" style="--reveal-delay: 0.05s">
+        {person.name}
+      </h1>
+      <p class="hero__location reveal" style="--reveal-delay: 0.1s">
+        <Icon name="pin" size={16} />
         {person.locality}, {person.countryName}
       </p>
-      <p class="hero__actions reveal" style="--reveal-delay: 0.2s">
+      <p class="hero__actions reveal" style="--reveal-delay: 0.15s">
         <a class="button button--primary" href="#courses">
           View courses
           <Icon name="arrow" class="icon-arrow" />
         </a>
-        <a class="hero__contact" href="#contact">Contact</a>
+        <a class="button button--secondary" href="#contact">Contact</a>
       </p>
     </div>
 
     <figure class="hero__media reveal" style="--reveal-delay: 0.1s">
+      <span class="hero__circle hero__circle--apricot" aria-hidden="true"></span>
+      <span class="hero__circle hero__circle--sage" aria-hidden="true"></span>
+      <span class="hero__circle hero__circle--teal" aria-hidden="true"></span>
       <Picture
         src={heroPhoto}
         alt={photos.hero.alt}
         formats={['avif', 'webp']}
-        widths={[400, 640, 960, 1280]}
-        sizes="(min-width: 64rem) 30rem, (min-width: 40rem) 60vw, 92vw"
+        widths={[320, 480, 720, 960]}
+        sizes="(min-width: 64rem) 24rem, 75vw"
         loading="eager"
         fetchpriority="high"
+        class="hero__photo"
       />
     </figure>
   </div>
@@ -43,73 +52,106 @@ import heroPhoto from '../assets/alex-rivera-workshop.jpg';
 
 <style>
   .hero {
+    overflow: hidden;
     background: var(--color-tint);
-    border-bottom: 1px solid var(--color-line);
   }
 
   .hero__inner {
-    display: grid;
-    gap: 3rem;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    padding-block: clamp(3rem, 2rem + 5vw, 6.5rem);
-  }
-
-  @media (min-width: 52rem) {
-    .hero__inner {
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-      gap: 4.5rem;
-    }
+    gap: 3rem 4rem;
+    padding-block: clamp(3rem, 2rem + 5vw, 6rem);
   }
 
   .hero__text {
+    flex: 1 1 27rem;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
+  }
+
+  .hero__title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
   }
 
   .hero__name {
     font-size: var(--text-h1);
-    font-weight: 600;
     line-height: 1;
-    letter-spacing: -0.025em;
-  }
-
-  .hero__title {
-    font-size: var(--text-lead);
-    font-weight: 500;
-    color: var(--color-ink);
+    letter-spacing: -0.04em;
   }
 
   .hero__location {
-    color: var(--color-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text);
   }
 
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 1.75rem;
-    margin-top: 1rem;
-  }
-
-  .hero__contact {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.75rem;
-    font-weight: 600;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
   }
 
   .hero__media {
-    max-width: 30rem;
+    position: relative;
+    flex: 1 1 21rem;
     width: 100%;
-    justify-self: center;
+    max-width: 30rem;
+    aspect-ratio: 1;
+    margin-inline: auto;
+  }
+
+  /* On phones, show the photo above the text. */
+  @media (max-width: 47.99rem) {
+    .hero__media {
+      order: -1;
+      max-width: 22rem;
+    }
+  }
+
+  .hero__circle {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  .hero__circle--apricot {
+    width: 46%;
+    top: 2%;
+    right: -2%;
+    background: var(--color-apricot);
+  }
+
+  .hero__circle--sage {
+    width: 38%;
+    bottom: 4%;
+    left: -4%;
+    background: var(--color-sage);
+  }
+
+  .hero__circle--teal {
+    width: 22%;
+    bottom: 0;
+    right: 6%;
+    background: var(--color-accent);
   }
 
   .hero__media :global(img) {
-    width: 100%;
-    aspect-ratio: 4 / 5;
+    position: absolute;
+    inset: 9%;
+    width: 82%;
+    height: 82%;
     object-fit: cover;
-    object-position: 50% 30%;
-    border-radius: var(--radius);
+    object-position: 50% 22%;
+    border: 0.5rem solid var(--color-surface);
+    border-radius: 50%;
   }
 </style>

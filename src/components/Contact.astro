@@ -1,7 +1,8 @@
 ---
 /**
- * Contact section: her email as a mailto link. No form, by design: the
- * brief asks only for the email, and a form would need a back end.
+ * Contact section: her email as a mailto link, in a teal panel on a dark
+ * band with rounded top corners. No form, by design: the brief asks only
+ * for the email, and a form would need a back end.
  */
 import { person } from '../content/site';
 
@@ -9,45 +10,130 @@ import { person } from '../content/site';
 const [emailUser, emailDomain] = person.email.split('@');
 ---
 
-<section id="contact" class="section contact" aria-labelledby="contact-title">
-  <div class="container contact__inner">
-    <h2 id="contact-title" class="section-title reveal">Contact</h2>
-    <dl class="contact__details reveal" style="--reveal-delay: 0.1s">
-      <dt>Email</dt>
-      <dd>
-        <a class="contact__email" href={`mailto:${person.email}`}>
-          {emailUser}@<wbr />{emailDomain}
-        </a>
-      </dd>
-    </dl>
+<section id="contact" class="contact on-dark" aria-labelledby="contact-title">
+  <div class="contact__band">
+    <div class="container contact__inner">
+      <div class="contact__panel reveal">
+        <span class="contact__circle contact__circle--apricot" aria-hidden="true"></span>
+        <span class="contact__circle contact__circle--sage" aria-hidden="true"></span>
+        <h2 id="contact-title" class="section-title contact__title">Contact</h2>
+        <dl class="contact__details">
+          <dt>Email</dt>
+          <dd>
+            <a class="contact__email" href={`mailto:${person.email}`}>
+              {emailUser}@<wbr />{emailDomain}
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
-  .contact__inner {
-    display: grid;
-    gap: 1.5rem;
+  /* The tint behind the band shows through its rounded top corners. */
+  .contact {
+    background: var(--color-tint);
   }
 
-  @media (min-width: 52rem) {
-    .contact__inner {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
-      gap: 4rem;
-      align-items: baseline;
+  .contact__band {
+    border-radius: var(--radius-band) var(--radius-band) 0 0;
+    background: var(--color-ink);
+  }
+
+  .contact__inner {
+    padding-block: var(--section-space);
+  }
+
+  .contact__panel {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: clamp(2rem, 1rem + 5vw, 4.5rem);
+    border-radius: var(--radius-lg);
+    background: var(--color-accent);
+  }
+
+  .contact__circle {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .contact__circle--apricot {
+    width: 21rem;
+    right: -7.5rem;
+    bottom: -9.5rem;
+    background: var(--color-apricot);
+    opacity: 0.9;
+  }
+
+  .contact__circle--sage {
+    width: 11rem;
+    right: 9rem;
+    bottom: -7rem;
+    background: var(--color-sage);
+    opacity: 0.55;
+  }
+
+  /* On phones, keep the circles small and in the corner so they never sit behind the text. */
+  @media (max-width: 47.99rem) {
+    .contact__panel {
+      padding-bottom: 5.5rem;
     }
+
+    .contact__circle--apricot {
+      width: 9rem;
+      right: -3.5rem;
+      bottom: -5rem;
+    }
+
+    .contact__circle--sage {
+      width: 5rem;
+      right: 3.5rem;
+      bottom: -3.25rem;
+    }
+  }
+
+  .contact__title {
+    position: relative;
+    color: var(--color-surface);
+  }
+
+  .contact__details {
+    position: relative;
+    margin-top: 0.5rem;
   }
 
   .contact__details dt {
     margin-bottom: 0.25rem;
     font-size: var(--text-sm);
-    color: var(--color-muted);
+    color: var(--color-on-dark-muted);
   }
 
   .contact__email {
+    padding-inline: 0.25rem;
     font-family: var(--font-display);
-    font-size: clamp(1.625rem, 1.1rem + 2.4vw, 2.75rem);
-    font-weight: 500;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    font-size: clamp(1.5rem, 0.6rem + 4.4vw, 3.75rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--color-surface);
+    text-decoration: none;
+    background-image: linear-gradient(var(--color-apricot), var(--color-apricot));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 3px;
+    transition:
+      background-size 0.35s ease,
+      color 0.35s ease;
+  }
+
+  .contact__email:hover {
+    color: var(--color-ink);
+    background-size: 100% 100%;
   }
 </style>

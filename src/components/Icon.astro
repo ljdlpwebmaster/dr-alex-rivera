@@ -1,10 +1,10 @@
 ---
 /**
  * Small inline SVG icon set. Icons are decorative (aria-hidden), so the
- * text next to them always carries the meaning.
+ * text or aria-label next to them always carries the meaning.
  */
 interface Props {
-  name: 'arrow';
+  name: 'arrow' | 'arrow-up' | 'clock' | 'pin';
   size?: number;
   class?: string;
 }
@@ -13,6 +13,9 @@ const { name, size = 18, class: className } = Astro.props;
 
 const paths = {
   arrow: '<path d="M5 12h14M13 6l6 6-6 6" />',
+  'arrow-up': '<path d="M12 19V5M6 11l6-6 6 6" />',
+  clock: '<circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />',
+  pin: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" />',
 };
 ---
 

@@ -1,7 +1,6 @@
 ---
 /**
- * Courses section: one row per course in the content model, mirroring the
- * table the courses were supplied in.
+ * Courses section: one CourseCard per course in the content model.
  */
 import CourseCard from './CourseCard.astro';
 import { courses } from '../content/site';
@@ -13,8 +12,8 @@ import { courses } from '../content/site';
     <ul class="courses__list" role="list">
       {
         courses.map((course, index) => (
-          <li class="reveal" style={`--reveal-delay: ${index * 0.08}s`}>
-            <CourseCard course={course} />
+          <li class="reveal" style={`--reveal-delay: ${index * 0.1}s`}>
+            <CourseCard course={course} index={index} />
           </li>
         ))
       }
@@ -25,17 +24,18 @@ import { courses } from '../content/site';
 <style>
   .courses {
     background: var(--color-tint);
-    border-block: 1px solid var(--color-line);
   }
 
   .courses__title {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
   }
 
   .courses__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(17.5rem, 100%), 1fr));
+    gap: 1.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
-    border-bottom: 1px solid var(--color-line);
   }
 </style>
