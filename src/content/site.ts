@@ -94,6 +94,7 @@ export const page = {
   title: `${person.name} | ${person.jobTitle}`,
   description:
     'Clinical psychologist in Sydney, Australia, training psychologists, counsellors and social workers in Acceptance and Commitment Therapy.',
+  siteName: person.name,
   locale: 'en_AU',
   lang: 'en-AU',
 };

@@ -1,7 +1,8 @@
 ---
 /**
  * Document shell: <head> metadata for SEO and sharing, JSON-LD, favicons,
- * skip link and global styles. Every page renders inside this layout.
+ * skip link, global styles and the scroll-reveal enhancement. Every page
+ * renders inside this layout.
  */
 import '../styles/global.css';
 import { page } from '../content/site';
@@ -45,7 +46,7 @@ const robots = noindex || isPreviewBuild ? 'noindex, nofollow' : 'index, follow'
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
     <link rel="canonical" href={canonicalUrl} />
-    <meta name="theme-color" content="#0f4c45" />
+    <meta name="theme-color" content="#1d5c55" />
 
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -55,6 +56,7 @@ const robots = noindex || isPreviewBuild ? 'noindex, nofollow' : 'index, follow'
 
     <meta property="og:type" content="profile" />
     <meta property="og:locale" content={page.locale} />
+    <meta property="og:site_name" content={page.siteName} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -69,6 +71,33 @@ const robots = noindex || isPreviewBuild ? 'noindex, nofollow' : 'index, follow'
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
+
+    <!--
+      Scroll reveal: progressive enhancement only. All content is already in
+      the HTML and visible without this script. It is inlined (no extra
+      request) and skipped for visitors who prefer reduced motion.
+    -->
+    <script is:inline>
+      (() => {
+        const motionOk = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+        if (!motionOk || !('IntersectionObserver' in window)) return;
+
+        const items = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+        );
+
+        document.documentElement.classList.add('reveal-ready');
+        items.forEach((item) => observer.observe(item));
+      })();
+    </script>
   </body>
 </html>
 
@@ -79,12 +108,11 @@ const robots = noindex || isPreviewBuild ? 'noindex, nofollow' : 'index, follow'
     left: 1rem;
     z-index: 100;
     padding: 0.75rem 1.125rem;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
     background: var(--color-ink);
     color: var(--color-surface);
     font-weight: 600;
     text-decoration: none;
-    transition: top 0.2s ease;
   }
 
   .skip-link:focus {
