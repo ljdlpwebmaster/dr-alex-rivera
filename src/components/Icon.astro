@@ -4,7 +4,7 @@
  * text next to them always carries the meaning.
  */
 interface Props {
-  name: 'arrow' | 'pin';
+  name: 'arrow';
   size?: number;
   class?: string;
 }
@@ -13,7 +13,6 @@ const { name, size = 18, class: className } = Astro.props;
 
 const paths = {
   arrow: '<path d="M5 12h14M13 6l6 6-6 6" />',
-  pin: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" />',
 };
 ---
 

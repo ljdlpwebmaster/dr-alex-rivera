@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // The production URL. Change it here only: canonical links, Open Graph,
 // JSON-LD and the sitemap all read from `site`.
-const SITE_URL = 'https://dr-alex-rivera.pages.dev';
+const SITE_URL = 'https://dr-alex-rivera-lz4.pages.dev';
 
 export default defineConfig({
   site: SITE_URL,

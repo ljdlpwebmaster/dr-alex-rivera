@@ -1,50 +1,44 @@
 /*
- * Global styles: design tokens, a small reset, base typography and the few
- * shared helpers. Component-specific styles live in each .astro component.
+ * Global styles: design tokens, a small reset, base typography, shared
+ * helpers and the scroll-reveal states. Component styles live in each
+ * .astro component.
  */
 
 @import '@fontsource-variable/inter';
-@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/source-serif-4';
 
 /* ---------- Design tokens ---------- */
 :root {
-  /* Colour. Text pairs meet WCAG AA (4.5:1) or better. */
-  --color-ink: #0e1b19;
-  --color-ink-soft: #1f3330;
-  --color-muted: #3b504c;
+  /* Colour. Every text pair meets WCAG AA (4.5:1) or better. */
+  --color-ink: #14211f;
+  --color-text: #2b3a37;
+  --color-muted: #4f5f5c;
   --color-surface: #ffffff;
-  --color-mint: #e8f1ee;
-  --color-teal: #0f4c45;
-  --color-teal-dark: #0a3530;
-  --color-apricot: #f2a65a;
-  --color-rust: #c2410c;
-  --color-dark-card: #16302c;
-  --color-dark-border: #2a4a45;
-  --color-on-dark-muted: #c3d4d0;
-  --color-line: rgb(15 76 69 / 0.14);
+  --color-tint: #f2f5f4;
+  --color-accent: #1d5c55;
+  --color-accent-dark: #133f3a;
+  --color-line: #d9e1df;
 
   /* Type */
   --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Bricolage Grotesque Variable', var(--font-body);
+  --font-display: 'Source Serif 4 Variable', Georgia, 'Times New Roman', serif;
+  --text-sm: 0.9375rem;
   --text-base: 1.0625rem;
-  --text-lead: clamp(1.1875rem, 1rem + 0.9vw, 1.5rem);
-  --text-h1: clamp(3rem, 1.6rem + 6.6vw, 7rem);
-  --text-h2: clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem);
-  --text-h3: 1.4375rem;
+  --text-lead: clamp(1.1875rem, 1.05rem + 0.6vw, 1.4375rem);
+  --text-h1: clamp(2.75rem, 1.8rem + 4.4vw, 5.25rem);
+  --text-h2: clamp(2rem, 1.6rem + 1.8vw, 3rem);
+  --text-h3: clamp(1.25rem, 1.15rem + 0.4vw, 1.4375rem);
 
   /* Space and shape */
-  --container: 75rem;
-  --gutter: 1.5rem;
-  --section-space: clamp(4rem, 2.5rem + 6vw, 8rem);
-  --radius-sm: 0.75rem;
-  --radius-md: 1.5rem;
-  --radius-lg: 2rem;
-  --radius-pill: 999px;
+  --container: 72rem;
+  --gutter: clamp(1.25rem, 0.8rem + 2vw, 2rem);
+  --section-space: clamp(4rem, 2.75rem + 5vw, 7.5rem);
+  --radius: 0.375rem;
 
-  /* Sticky header height, used so anchor jumps are not hidden under it. */
-  --header-height: 4.5rem;
+  /* Sticky header height, so anchor jumps are not hidden under it. */
+  --header-height: 4.25rem;
 
-  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* ---------- Reset ---------- */
@@ -81,10 +75,9 @@ html {
 body {
   font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: 1.6;
-  color: var(--color-ink);
+  line-height: 1.65;
+  color: var(--color-text);
   background: var(--color-surface);
-  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -92,8 +85,10 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
   text-wrap: balance;
 }
 
@@ -102,23 +97,21 @@ p {
 }
 
 a {
-  color: var(--color-teal);
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
 a:hover {
-  color: var(--color-teal-dark);
+  color: var(--color-accent-dark);
 }
 
-/* Visible keyboard focus everywhere. Dark sections switch the colour. */
+/* Visible keyboard focus everywhere. */
 :focus-visible {
-  outline: 3px solid var(--color-rust);
-  outline-offset: 4px;
-  border-radius: 0.5rem;
-}
-
-.on-dark :focus-visible {
-  outline-color: var(--color-apricot);
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* Anchor targets clear the sticky header. */
@@ -138,21 +131,8 @@ a:hover {
   padding-block: var(--section-space);
 }
 
-.section-label {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.9375rem;
-  color: var(--color-rust);
-}
-
-.on-dark .section-label {
-  color: var(--color-apricot);
-}
-
 .section-title {
   font-size: var(--text-h2);
-  font-weight: 800;
-  line-height: 1;
 }
 
 /* Hidden visually, still read by screen readers. */
@@ -171,91 +151,64 @@ a:hover {
 .button {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
-  min-height: 3.25rem;
-  padding-inline: 1.625rem;
-  border-radius: var(--radius-pill);
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding-inline: 1.5rem;
+  border-radius: var(--radius);
   font-weight: 600;
   text-decoration: none;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    background-color 0.25s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .button--primary {
-  background: var(--color-teal);
+  background: var(--color-accent);
   color: var(--color-surface);
 }
 
 .button--primary:hover {
-  background: var(--color-teal-dark);
+  background: var(--color-accent-dark);
   color: var(--color-surface);
-}
-
-.button--secondary {
-  background: var(--color-surface);
-  color: var(--color-ink);
-  border: 1.5px solid var(--color-ink);
-}
-
-.button--secondary:hover {
-  color: var(--color-ink);
-}
-
-.button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px -10px rgb(15 76 69 / 0.55);
 }
 
 .icon-arrow {
   flex: none;
-  transition: transform 0.25s ease;
+  transition: transform 0.2s ease;
 }
 
 a:hover .icon-arrow {
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
-/* ---------- Motion (progressive enhancement) ----------
- * Content is always visible. Scroll-driven reveals only run in browsers that
- * support animation-timeline, and nothing moves for users who ask for
- * reduced motion.
+/* ---------- Scroll reveal ----------
+ * Progressive enhancement. Content is visible by default. The small inline
+ * script in BaseLayout adds .reveal-ready to <html> only when it runs, the
+ * browser supports IntersectionObserver and the visitor has not asked for
+ * reduced motion. Only then are .reveal elements hidden and faded in as
+ * they scroll into view. Without JavaScript nothing is hidden.
  */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
   }
-
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: reveal-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 5% cover 30%;
-    }
-  }
 }
 
-@keyframes reveal-rise {
-  from {
-    opacity: 0;
-    transform: translateY(3rem);
-  }
+.reveal-ready .reveal {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0s);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+.reveal-ready .reveal.is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 /* On narrow screens the header wraps to two rows, so anchors need more room. */
 @media (max-width: 30rem) {
   :root {
-    --header-height: 6.5rem;
+    --header-height: 6.25rem;
   }
 }

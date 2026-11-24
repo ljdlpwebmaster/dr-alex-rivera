@@ -18,7 +18,7 @@ Also required: semantic HTML, clean readable code, accessible (headings in order
 ## Rules
 
 - Use the supplied content exactly as given. All copy lives in `src/content/site.ts`. Do not write new copy.
-- Ship no client-side JavaScript. Motion is CSS only, inside `@supports` and `prefers-reduced-motion: no-preference`.
+- Content must never depend on JavaScript. The only script is the inline scroll reveal in `BaseLayout.astro`, which hides nothing unless it runs, and skips reduced-motion visitors.
 - Keep one `h1` and headings in order.
 - Never work directly on `main`. Branch as `<type>/<yyyymmdd>-<topic>` (`design`, `content`, `fix`, `feat`).
 - Before committing: `npm test` (build + html-validate). Check 375 and 1440 px for overflow.
