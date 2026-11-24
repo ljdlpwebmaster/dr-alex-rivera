@@ -1,0 +1,253 @@
+---
+/**
+ * Top section: name (the page's only h1), title and photo.
+ * The photo is the largest element on first paint, so it loads eagerly
+ * with high fetch priority, in responsive AVIF/WebP sizes.
+ */
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import { person, photos } from '../content/site';
+import heroPhoto from '../assets/alex-rivera-workshop.jpg';
+---
+
+<section id="top" class="hero" aria-labelledby="hero-title">
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <p class="hero__location">
+        <Icon name="pin" size={16} />
+        {person.locality}, {person.countryName}
+      </p>
+      <h1 id="hero-title" class="hero__name">
+        {`${person.honorificPrefix} ${person.givenName} `}
+        <span class="hero__name-accent">{person.familyName}</span>
+      </h1>
+      <p class="hero__title">{person.jobTitle}</p>
+      <div class="hero__actions">
+        <a class="button button--primary" href="#courses">
+          View courses
+          <Icon name="arrow" class="icon-arrow" />
+        </a>
+        <a class="button button--secondary" href="#contact">Get in touch</a>
+      </div>
+    </div>
+
+    <figure class="hero__media">
+      <div class="hero__frame">
+        <Picture
+          src={heroPhoto}
+          alt={photos.hero.alt}
+          formats={['avif', 'webp']}
+          widths={[400, 640, 960, 1280]}
+          sizes="(min-width: 64rem) 28rem, (min-width: 40rem) 60vw, 90vw"
+          loading="eager"
+          fetchpriority="high"
+          class="hero__photo"
+        />
+      </div>
+      <p class="hero__stat">
+        <span class="hero__stat-number">12</span>
+        <span class="hero__stat-label">years training practitioners</span>
+      </p>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-mint);
+  }
+
+  /* Decorative rings, drawn in CSS so they carry no meaning for assistive tech. */
+  .hero::before,
+  .hero::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--color-line);
+    pointer-events: none;
+  }
+
+  .hero::before {
+    width: 38rem;
+    height: 38rem;
+    top: -14rem;
+    right: -11rem;
+  }
+
+  .hero::after {
+    width: 24rem;
+    height: 24rem;
+    bottom: -12rem;
+    left: -10rem;
+  }
+
+  .hero__inner {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3.5rem;
+    padding-block: clamp(3rem, 1.5rem + 6vw, 7rem) clamp(4rem, 2rem + 7vw, 7.5rem);
+  }
+
+  .hero__text {
+    flex: 1 1 27rem;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.375rem;
+  }
+
+  .hero__location {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-teal);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .hero__name {
+    font-size: var(--text-h1);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+  }
+
+  .hero__name-accent {
+    display: block;
+    color: var(--color-teal);
+  }
+
+  .hero__title {
+    font-size: var(--text-lead);
+    font-weight: 500;
+    color: var(--color-ink-soft);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.625rem;
+  }
+
+  .hero__media {
+    position: relative;
+    flex: 1 1 20rem;
+    max-width: 28rem;
+    margin-inline: auto;
+    padding: 0 0.75rem 1.75rem 0;
+  }
+
+  /* Offset apricot shape behind the arch. */
+  .hero__media::before {
+    content: '';
+    position: absolute;
+    inset: 1.75rem 0 0 1.75rem;
+    border-radius: var(--radius-pill) var(--radius-pill) 2.25rem 2.25rem;
+    background: var(--color-apricot);
+  }
+
+  .hero__frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radius-pill) var(--radius-pill) 2.25rem 2.25rem;
+    background: var(--color-teal);
+  }
+
+  .hero__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+
+  .hero__stat {
+    position: absolute;
+    left: -0.5rem;
+    bottom: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.125rem;
+    border-radius: 1.125rem;
+    background: var(--color-surface);
+    box-shadow: 0 18px 40px -18px rgb(14 27 25 / 0.45);
+  }
+
+  .hero__stat-number {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.125rem;
+    line-height: 1;
+    color: var(--color-teal);
+  }
+
+  .hero__stat-label {
+    max-width: 8rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-ink-soft);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__text > * {
+      animation: hero-in 0.8s var(--ease-out) both;
+    }
+
+    .hero__text > :nth-child(2) {
+      animation-delay: 0.08s;
+    }
+
+    .hero__text > :nth-child(3) {
+      animation-delay: 0.16s;
+    }
+
+    .hero__text > :nth-child(4) {
+      animation-delay: 0.24s;
+    }
+
+    .hero__stat {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @supports (animation-timeline: view()) {
+      .hero__frame :global(img) {
+        animation: slow-zoom linear both;
+        animation-timeline: view();
+      }
+    }
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+  }
+
+  @keyframes float {
+    50% {
+      transform: translateY(-0.625rem);
+    }
+  }
+
+  @keyframes slow-zoom {
+    from {
+      transform: scale(1.1);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+</style>

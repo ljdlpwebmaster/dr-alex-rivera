@@ -1,0 +1,86 @@
+---
+/**
+ * About section: the bio, with the specialty highlighted, and a photo.
+ */
+import { Picture } from 'astro:assets';
+import { person, photos } from '../content/site';
+import aboutPhoto from '../assets/alex-rivera-online.jpg';
+
+// Highlight the specialty inside the bio without editing the supplied copy.
+const [bioBefore, bioAfter] = person.bio.split(person.specialty);
+---
+
+<section id="about" class="section about" aria-labelledby="about-title">
+  <div class="container about__inner reveal">
+    <div class="about__text">
+      <p class="section-label" aria-hidden="true">01</p>
+      <h2 id="about-title" class="section-title">About</h2>
+      <p class="about__bio">
+        {bioBefore}<strong>{person.specialty}</strong>{bioAfter}
+      </p>
+    </div>
+    <figure class="about__media">
+      <Picture
+        src={aboutPhoto}
+        alt={photos.about.alt}
+        formats={['avif', 'webp']}
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 64rem) 34rem, 92vw"
+        class="about__photo"
+      />
+    </figure>
+  </div>
+</section>
+
+<style>
+  .about__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3rem 4.5rem;
+  }
+
+  .about__text {
+    flex: 1 1 28rem;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.375rem;
+  }
+
+  .about__bio {
+    max-width: 44ch;
+    font-size: var(--text-lead);
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+  }
+
+  .about__bio strong {
+    font-weight: 600;
+    color: var(--color-ink);
+    background: linear-gradient(transparent 62%, rgb(242 166 90 / 0.55) 62%);
+  }
+
+  .about__media {
+    position: relative;
+    flex: 1 1 22rem;
+    min-width: 0;
+    padding: 0 0 1.25rem 1.25rem;
+  }
+
+  .about__media::before {
+    content: '';
+    position: absolute;
+    inset: 1.25rem 1.25rem 0 0;
+    border-radius: 1.75rem;
+    background: var(--color-mint);
+  }
+
+  .about__media :global(img) {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 8 / 5;
+    object-fit: cover;
+    border-radius: 1.75rem;
+  }
+</style>

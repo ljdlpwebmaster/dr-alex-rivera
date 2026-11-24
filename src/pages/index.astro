@@ -1,0 +1,41 @@
+---
+/**
+ * The one page. It only assembles sections; content lives in
+ * src/content/site.ts and each section owns its markup and styles.
+ */
+import { getImage } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Courses from '../components/Courses.astro';
+import Contact from '../components/Contact.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { photos } from '../content/site';
+import { buildStructuredData } from '../lib/structured-data';
+import heroPhoto from '../assets/alex-rivera-workshop.jpg';
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+// A JPEG copy of the hero photo for social previews and JSON-LD, which need
+// one absolute URL in a widely supported format.
+const shareImage = await getImage({ src: heroPhoto, width: 1200, format: 'jpg' });
+const shareImageUrl = new URL(shareImage.src, Astro.site).href;
+
+const structuredData = buildStructuredData({ pageUrl, imageUrl: shareImageUrl });
+---
+
+<BaseLayout
+  socialImage={shareImageUrl}
+  socialImageAlt={photos.hero.alt}
+  structuredData={structuredData}
+>
+  <SiteHeader />
+  <main id="main">
+    <Hero />
+    <About />
+    <Courses />
+    <Contact />
+  </main>
+  <SiteFooter />
+</BaseLayout>

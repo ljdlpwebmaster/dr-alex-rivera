@@ -1,0 +1,114 @@
+---
+/**
+ * One course. Rendered as an <article> so it stands on its own: heading,
+ * description, length and link. The link text gets a visually hidden
+ * course name, so screen reader users hear which course each link opens.
+ */
+import Icon from './Icon.astro';
+import type { Course } from '../content/site';
+
+interface Props {
+  course: Course;
+  /** Position in the list, shown as 01, 02, 03. */
+  index: number;
+}
+
+const { course, index } = Astro.props;
+const number = String(index + 1).padStart(2, '0');
+const headingId = `${course.id}-title`;
+---
+
+<article id={course.id} class="course" aria-labelledby={headingId}>
+  <p class="course__number" aria-hidden="true">{number}</p>
+  <h3 id={headingId} class="course__title">{course.name}</h3>
+  <p class="course__description">{course.description}</p>
+  <dl class="course__meta">
+    <dt>Length</dt>
+    <dd>{course.length}</dd>
+  </dl>
+  <a class="course__link" href={course.href}>
+    Course details<span class="visually-hidden">: {course.name}</span>
+    <Icon name="arrow" class="icon-arrow" />
+  </a>
+</article>
+
+<style>
+  .course {
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    height: 100%;
+    padding: 1.875rem;
+    border: 1px solid var(--color-dark-border);
+    border-radius: var(--radius-md);
+    background: var(--color-dark-card);
+    transition:
+      transform 0.35s ease,
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+
+  .course:hover,
+  .course:focus-within {
+    transform: translateY(-0.5rem);
+    border-color: var(--color-apricot);
+    box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.6);
+  }
+
+  .course__number {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.75rem;
+    line-height: 1;
+    color: var(--color-apricot);
+  }
+
+  .course__title {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .course__description {
+    flex-grow: 1;
+    color: var(--color-on-dark-muted);
+  }
+
+  .course__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .course__meta dt {
+    color: var(--color-on-dark-muted);
+  }
+
+  .course__meta dt::after {
+    content: ':';
+  }
+
+  .course__meta dd {
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: rgb(232 241 238 / 0.1);
+    font-weight: 600;
+  }
+
+  .course__link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    font-weight: 600;
+    color: var(--color-apricot);
+  }
+
+  .course__link:hover {
+    color: var(--color-surface);
+  }
+</style>

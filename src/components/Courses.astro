@@ -1,0 +1,54 @@
+---
+/**
+ * Courses section: one CourseCard per course in the content model.
+ */
+import CourseCard from './CourseCard.astro';
+import { courses } from '../content/site';
+---
+
+<section id="courses" class="section courses on-dark" aria-labelledby="courses-title">
+  <div class="container courses__inner">
+    <div class="courses__header reveal">
+      <p class="section-label" aria-hidden="true">02</p>
+      <h2 id="courses-title" class="section-title">Courses</h2>
+    </div>
+    <ul class="courses__list" role="list">
+      {
+        courses.map((course, index) => (
+          <li class="reveal">
+            <CourseCard course={course} index={index} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .courses {
+    border-radius: clamp(1.75rem, 4vw, 3rem) clamp(1.75rem, 4vw, 3rem) 0 0;
+    background: var(--color-ink);
+    color: var(--color-surface);
+  }
+
+  .courses__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .courses__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .courses__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

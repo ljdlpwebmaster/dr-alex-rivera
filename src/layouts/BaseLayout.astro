@@ -1,0 +1,93 @@
+---
+/**
+ * Document shell: <head> metadata for SEO and sharing, JSON-LD, favicons,
+ * skip link and global styles. Every page renders inside this layout.
+ */
+import '../styles/global.css';
+import { page } from '../content/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Absolute URL of the image used for social previews. */
+  socialImage?: string;
+  socialImageAlt?: string;
+  /** schema.org graph, serialised into a JSON-LD script tag. */
+  structuredData?: object;
+  /** Set on pages search engines should skip, such as the 404 page. */
+  noindex?: boolean;
+}
+
+const {
+  title = page.title,
+  description = page.description,
+  socialImage,
+  socialImageAlt,
+  structuredData,
+  noindex = false,
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+// Cloudflare Pages sets CF_PAGES_BRANCH during builds. Preview branches are
+// kept out of search results so only the production URL is indexed.
+const branch = process.env.CF_PAGES_BRANCH;
+const isPreviewBuild = Boolean(branch && branch !== 'main');
+const robots = noindex || isPreviewBuild ? 'noindex, nofollow' : 'index, follow';
+---
+
+<!doctype html>
+<html lang={page.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="theme-color" content="#0f4c45" />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:locale" content={page.locale} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    {socialImageAlt && <meta property="og:image:alt" content={socialImageAlt} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: -5rem;
+    left: 1rem;
+    z-index: 100;
+    padding: 0.75rem 1.125rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-ink);
+    color: var(--color-surface);
+    font-weight: 600;
+    text-decoration: none;
+    transition: top 0.2s ease;
+  }
+
+  .skip-link:focus {
+    top: 0.75rem;
+  }
+</style>
